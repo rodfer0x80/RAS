@@ -1,3 +1,4 @@
-wheel
+streamlit
 transformers
 torch
+transformers
