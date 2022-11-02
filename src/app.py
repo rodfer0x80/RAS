@@ -18,8 +18,8 @@ def getIndex():
 def postReads():
     data = request.form.get('reads')
     with open("links.txt", 'w') as f:
-        for line in data:
-            f.write(line)
+        for line in data.splitlines():
+            f.write(f"{line}\n")
     return redirect("/model")
 
 model_bp = Blueprint("model", __name__, template_folder='templates')
@@ -49,6 +49,6 @@ def getQuestions():
 def postQuestion():
     data = request.form.get('question')
     with open("questions.txt", 'a') as f:
-        for line in data:
-            f.write(line)
+        for line in data.splitlines():
+            f.write(f"{line}\n")
     return redirect("/model")
