@@ -1,6 +1,6 @@
 .PHONY: run 
 run: 
-	./scripts/run.py
+	./__main__.py
 
 .PHONY: build 
 build: 

@@ -1,46 +1,31 @@
 #!/usr/bin/env python3
+
+
 import sys
-import os 
 
-import streamlit as st
+from src.scrapper import Scrapper
+from src.parser import Parser
+from src.server import Server
 
 
-# st.title('Ask Me Anything 📚')
-st.markdown("<h1 style='text-align: center; color: white;'>Ask Me Anything 🎓</h1>", unsafe_allow_html=True)
-st.markdown('')
-st.markdown('')
+# Error table
+# 1 :: default error exit code
+# 0 :: return successful exit code
 
-st.session_state['new']=True
-# if st.session_state.new==True:
-#     os.system('!pip install torch==1.10.2+cu113 torchvision==0.11.3+cu113 torchaudio===0.10.2+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html')
-#     os.system('!pip install transformers')
-#     st.session_state.new=False 
 
-from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
+def main():
+    scrapper = Scrapper()
+    parser = Parser()
+    server = Server(scrapper, parser)
+    rc = 1
+    try:
+        rc = server.start()
+        rc = server.stop()
+    except:
+        return rc
+    rc = 0
+    return rc
 
-form = st.form(key='my_form')
 
-# creating the q/a pipeline
-nlp = pipeline('question-answering', model='deepset/roberta-base-squad2', tokenizer='deepset/roberta-base-squad2')
-
-text = form.text_area('Gimme Stuff To Study 📚')
-
-submit_button = form.form_submit_button(label='Study This')
-
-st.markdown('---')
-ques=st.text_input('Ask Me Anything From The Information You Have Given')
-
-#forming a question directory 
-ques_dict = {
-                'question':ques, 
-                'context':text
-               }
-
-butt = st.button('Ask 🤷🏻')
-
-if butt==True:
-    results = nlp(ques_dict)
-    st.markdown('---')
-    st.subheader('Here Is Your Answer')
-    st.success(results['answer'])
-    st.balloons()
+if __name__ == '__main__':
+    sys.exit(main())
